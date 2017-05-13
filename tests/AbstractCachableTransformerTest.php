@@ -178,7 +178,8 @@ class AbstractCachableTransformerTest extends TestCase
 
     /**
      * @param CacheItemPoolInterface|null $cache
-     * @param \DateInterval|null $expiresAfter
+     * @param \DateInterval|null          $expiresAfter
+     * 
      * @return \PHPUnit_Framework_MockObject_MockObject|CachableTransformerInterface
      */
     private function getAbstractCachableTransformerMock(CacheItemPoolInterface $cache = null, \DateInterval $expiresAfter = null): CachableTransformerInterface
