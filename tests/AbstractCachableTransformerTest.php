@@ -11,43 +11,24 @@
 
 namespace SR\Cocoa\Transformer\Tests;
 
+use Faker\Factory;
+use PHPUnit\Framework\TestCase;
 use Psr\Cache\CacheItemInterface;
 use Psr\Cache\CacheItemPoolInterface;
 use SR\Cocoa\Transformer\AbstractCachableTransformer;
 use SR\Cocoa\Transformer\CachableTransformerInterface;
+use SR\Cocoa\Transformer\Tests\Fixtures\StringTransformer;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 
 /**
  * Class ExceptionTest.
  */
-class AbstractCachableTransformerTest extends \PHPUnit_Framework_TestCase
+class AbstractCachableTransformerTest extends TestCase
 {
-    public function testTransformerCaching()
+    public function testMockedCallsCached()
     {
-        $stringInput = 'input-string';
-        $stringOutput = 'output-string';
-        $expiresAfter = new \DateInterval('PT1S');
-
-        $transformer = $this->getAbstractCachableTransformerMock($this->getArrayAdapterMock(), $expiresAfter);
-        $transformer
-            ->expects($this->once())
-            ->method('runTransformation')
-            ->with($stringInput)
-            ->willReturn($stringOutput);
-
-        $this->assertFalse($transformer->isCached($stringInput));
-        $transformer->transform($stringInput);
-        $this->assertTrue($transformer->isCached($stringInput));
-
-        sleep(2);
-
-        $this->assertFalse($transformer->isCached($stringInput));
-    }
-
-    public function testTransformerMockedCached()
-    {
-        $stringInput = 'input-string';
-        $stringOutput = 'output-string';
+        $provided = $this->getLoremText();
+        $expected = sprintf('transformed=[%s]', $provided);
         $expiresAfter = new \DateInterval('PT1S');
 
         $item = $this->getCacheItemInterfaceMock();
@@ -70,7 +51,7 @@ class AbstractCachableTransformerTest extends \PHPUnit_Framework_TestCase
         $item
             ->expects($this->once())
             ->method('get')
-            ->willReturn($stringOutput);
+            ->willReturn($expected);
 
         $cache = $this->getCacheItemPoolInterfaceMock();
         $cache
@@ -89,13 +70,13 @@ class AbstractCachableTransformerTest extends \PHPUnit_Framework_TestCase
         $transformer
             ->expects($this->once())
             ->method('runTransformation')
-            ->with($stringInput)
-            ->willReturn($stringOutput);
+            ->with($provided)
+            ->willReturn($expected);
 
-        $transformer->transform($stringInput);
+        $transformer->transform($provided);
     }
 
-    public function testTransformerMockedNotCached()
+    public function testMockedCallsNotCached()
     {
         $stringInput = 'input-string';
         $stringOutput = 'output-string';
@@ -139,15 +120,60 @@ class AbstractCachableTransformerTest extends \PHPUnit_Framework_TestCase
         $transformer->transform($stringInput);
     }
 
-    public function testArrayTransformer()
+    public function testSupports()
     {
-        $transformer = new StringTransformer($this->getArrayAdapterMock());
+        $transformer = $this->getCachableSimpleStringTransformerInstance();
 
         $this->assertTrue($transformer->supports('string'));
         $this->assertFalse($transformer->isCached('string'));
-        $this->assertSame('transformed:string', $transformer->transform('string'));
+        $this->assertSame('transformed=[string]', $transformer->transform('string'));
         $this->assertTrue($transformer->isCached('string'));
         $this->assertFalse($transformer->supports('not-string'));
+    }
+
+    public function testTransforms()
+    {
+        $provided = $this->getLoremText();
+        $expected = sprintf('transformed=[%s]', $provided);
+
+        $transformer = $this->getCachableSimpleStringTransformerInstance(null, $expiresAfter = new \DateInterval('PT1S'));
+
+        $this->assertSame($expected, $transformer->transform($provided));
+    }
+
+    public function testCaches()
+    {
+        $provided = $this->getLoremText();
+        $transformer = $this->getCachableSimpleStringTransformerInstance(null, $expiresAfter = new \DateInterval('PT1S'));
+
+        $this->assertFalse($transformer->isCached($provided));
+        $transformer->transform($provided);
+        $this->assertTrue($transformer->isCached($provided));
+
+        sleep(2);
+
+        $this->assertFalse($transformer->isCached($provided));
+    }
+
+    /**
+     * @param int|null $maximumCharacters
+     *
+     * @return string
+     */
+    private function getLoremText(int $maximumCharacters = null): string
+    {
+        return Factory::create()->text($maximumCharacters ?: 200);
+    }
+
+    /**
+     * @param CacheItemPoolInterface|null $cache
+     * @param \DateInterval               $expiresAfter
+     *
+     * @return CachableTransformerInterface
+     */
+    private function getCachableSimpleStringTransformerInstance(CacheItemPoolInterface $cache = null, \DateInterval $expiresAfter = null): CachableTransformerInterface
+    {
+        return new StringTransformer($cache ?: $this->getArrayAdapterMock(), $expiresAfter);
     }
 
     /**
@@ -155,7 +181,7 @@ class AbstractCachableTransformerTest extends \PHPUnit_Framework_TestCase
      * @param \DateInterval|null $expiresAfter
      * @return \PHPUnit_Framework_MockObject_MockObject|CachableTransformerInterface
      */
-    private function getAbstractCachableTransformerMock(CacheItemPoolInterface $cache = null, \DateInterval $expiresAfter = null)
+    private function getAbstractCachableTransformerMock(CacheItemPoolInterface $cache = null, \DateInterval $expiresAfter = null): CachableTransformerInterface
     {
         return $this
             ->getMockBuilder(AbstractCachableTransformer::class)
@@ -166,7 +192,7 @@ class AbstractCachableTransformerTest extends \PHPUnit_Framework_TestCase
     /**
      * @return \PHPUnit_Framework_MockObject_MockObject|CacheItemPoolInterface
      */
-    private function getCacheItemPoolInterfaceMock()
+    private function getCacheItemPoolInterfaceMock(): CacheItemPoolInterface
     {
         return $this
             ->getMockBuilder(CacheItemPoolInterface::class)
@@ -176,7 +202,7 @@ class AbstractCachableTransformerTest extends \PHPUnit_Framework_TestCase
     /**
      * @return \PHPUnit_Framework_MockObject_MockObject|ArrayAdapter
      */
-    private function getArrayAdapterMock()
+    private function getArrayAdapterMock(): ArrayAdapter
     {
         return $this
             ->getMockBuilder(ArrayAdapter::class)
@@ -186,18 +212,10 @@ class AbstractCachableTransformerTest extends \PHPUnit_Framework_TestCase
     /**
      * @return \PHPUnit_Framework_MockObject_MockObject|CacheItemInterface
      */
-    private function getCacheItemInterfaceMock()
+    private function getCacheItemInterfaceMock(): CacheItemInterface
     {
         return $this
             ->getMockBuilder(CacheItemInterface::class)
             ->getMockForAbstractClass();
-    }
-}
-
-class StringTransformer extends AbstractCachableTransformer
-{
-    protected function runTransformation(string $string): string
-    {
-        return 'transformed:'.$string;
     }
 }
