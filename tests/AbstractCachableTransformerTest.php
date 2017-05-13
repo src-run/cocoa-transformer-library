@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace SR\Cocoa\Transformer\Tests;
+namespace SR\Cocoa\Transformer\tests;
 
 use Faker\Factory;
 use PHPUnit\Framework\TestCase;
@@ -179,7 +179,7 @@ class AbstractCachableTransformerTest extends TestCase
     /**
      * @param CacheItemPoolInterface|null $cache
      * @param \DateInterval|null          $expiresAfter
-     * 
+     *
      * @return \PHPUnit_Framework_MockObject_MockObject|CachableTransformerInterface
      */
     private function getAbstractCachableTransformerMock(CacheItemPoolInterface $cache = null, \DateInterval $expiresAfter = null): CachableTransformerInterface
