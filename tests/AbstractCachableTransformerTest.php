@@ -136,7 +136,7 @@ class AbstractCachableTransformerTest extends TestCase
         $provided = $this->getLoremText();
         $expected = sprintf('transformed=[%s]', $provided);
 
-        $transformer = $this->getCachableSimpleStringTransformerInstance(null, $expiresAfter = new \DateInterval('PT1S'));
+        $transformer = $this->getCachableSimpleStringTransformerInstance();
 
         $this->assertSame($expected, $transformer->transform($provided));
     }
@@ -144,7 +144,7 @@ class AbstractCachableTransformerTest extends TestCase
     public function testCaches()
     {
         $provided = $this->getLoremText();
-        $transformer = $this->getCachableSimpleStringTransformerInstance(null, $expiresAfter = new \DateInterval('PT1S'));
+        $transformer = $this->getCachableSimpleStringTransformerInstance(null, new \DateInterval('PT1S'));
 
         $this->assertFalse($transformer->isCached($provided));
         $transformer->transform($provided);
