@@ -11,9 +11,9 @@
 
 namespace SR\Cocoa\Transformer\Tests\Fixtures;
 
-use SR\Cocoa\Transformer\AbstractCachableTransformer;
+use SR\Cocoa\Transformer\AbstractCacheableTransformer;
 
-class StringTransformer extends AbstractCachableTransformer
+class StringTransformer extends AbstractCacheableTransformer
 {
     /**
      * @param string $string

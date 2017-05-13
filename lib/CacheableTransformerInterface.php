@@ -11,7 +11,7 @@
 
 namespace SR\Cocoa\Transformer;
 
-interface CachableTransformerInterface extends TransformerInterface
+interface CacheableTransformerInterface extends TransformerInterface
 {
     /**
      * Returns true if the passed string transformation is cached.

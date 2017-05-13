@@ -13,7 +13,7 @@ namespace SR\Cocoa\Transformer;
 
 use Psr\Cache\CacheItemPoolInterface;
 
-abstract class AbstractCachableTransformer extends AbstractTransformer implements CachableTransformerInterface
+abstract class AbstractCacheableTransformer extends AbstractTransformer implements CacheableTransformerInterface
 {
     /**
      * @var CacheItemPoolInterface

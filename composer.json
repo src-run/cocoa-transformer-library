@@ -3,13 +3,13 @@
   "license": "MIT",
   "type": "library",
   "homepage": "https://src.run/cocoa-transformer-library",
-  "description": "Core exception class implementations with advanced context information and built-in string replacement functionality.",
+  "description": "Simple transformer and cacheable transformer interfaces with accompanying abstract implementations.",
   "support": {
     "email": "rmf@src.run",
     "issues": "https://src.run/cocoa-transformer-library/issues",
     "source": "https://src.run/cocoa-transformer-library/git"
   },
-  "keywords": [ "cocoa-transformer-library", "cocoa", "transformer", "library", "rmf", "src-run" ],
+  "keywords": [ "cocoa-transformer-library", "cocoa", "transformer", "cache", "cacheable", "library", "rmf", "src-run" ],
   "authors": [
     {
       "name": "Rob Frawley 2nd",
@@ -32,7 +32,7 @@
     "symfony/cache": "~3.2"
   },
   "suggest": {
-    "psr/cache": "Required for the cachable transformer implementation."
+    "psr/cache": "Required for the cacheable transformer implementation."
   },
   "autoload": {
     "psr-4": {
@@ -51,7 +51,7 @@
   },
   "extra": {
     "branch-alias": {
-      "dev-master": "0.1-dev"
+      "dev-master": "0.2-dev"
     }
   }
 }

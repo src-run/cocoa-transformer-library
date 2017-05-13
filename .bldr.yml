@@ -12,5 +12,5 @@ app_prep: dep-composer
 app_post: ~
 app_path: ~
 pkg_name: cocoa-transformer-library
-pkg_desc: "Simple string transformer interfaces with accompanying abstract implementations."
+pkg_desc: "Simple transformer and cacheable transformer interfaces with accompanying abstract implementations."
 pkg_bndl: false
