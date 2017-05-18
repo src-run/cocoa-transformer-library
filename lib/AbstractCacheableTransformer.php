@@ -32,7 +32,19 @@ abstract class AbstractCacheableTransformer extends AbstractTransformer implemen
     public function __construct(CacheItemPoolInterface $cache, \DateInterval $expiresAfter = null)
     {
         $this->cache = $cache;
+        $this->setExpiresAfter($expiresAfter);
+    }
+
+    /**
+     * @param \DateInterval|null $expiresAfter
+     *
+     * @return CacheableTransformerInterface
+     */
+    public function setExpiresAfter(\DateInterval $expiresAfter = null): CacheableTransformerInterface
+    {
         $this->expiresAfter = $expiresAfter;
+
+        return $this;
     }
 
     /**

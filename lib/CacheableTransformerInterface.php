@@ -14,6 +14,13 @@ namespace SR\Cocoa\Transformer;
 interface CacheableTransformerInterface extends TransformerInterface
 {
     /**
+     * @param \DateInterval|null $expiresAfter
+     *
+     * @return self
+     */
+    public function setExpiresAfter(\DateInterval $expiresAfter = null): self;
+
+    /**
      * Returns true if the passed string transformation is cached.
      *
      * @param string $string

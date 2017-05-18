@@ -170,7 +170,8 @@ class AbstractCacheableTransformerTest extends TestCase
      */
     private function getCacheableSimpleStringTransformerInstance(CacheItemPoolInterface $cache = null, \DateInterval $expiresAfter = null): CacheableTransformerInterface
     {
-        return new StringTransformer($cache ?: $this->getArrayAdapterMock(), $expiresAfter);
+        return (new StringTransformer($cache ?: $this->getArrayAdapterMock()))
+            ->setExpiresAfter($expiresAfter);
     }
 
     /**
@@ -183,8 +184,9 @@ class AbstractCacheableTransformerTest extends TestCase
     {
         return $this
             ->getMockBuilder(AbstractCacheableTransformer::class)
-            ->setConstructorArgs([$cache ?: $this->getCacheItemPoolInterfaceMock(), $expiresAfter])
-            ->getMockForAbstractClass();
+            ->setConstructorArgs([$cache ?: $this->getCacheItemPoolInterfaceMock()])
+            ->getMockForAbstractClass()
+            ->setExpiresAfter($expiresAfter);
     }
 
     /**
