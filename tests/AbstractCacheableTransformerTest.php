@@ -17,6 +17,7 @@ use Psr\Cache\CacheItemInterface;
 use Psr\Cache\CacheItemPoolInterface;
 use SR\Cocoa\Transformer\AbstractCacheableTransformer;
 use SR\Cocoa\Transformer\CacheableTransformerInterface;
+use SR\Cocoa\Transformer\Tests\Fixtures\StringCacheableTransformer;
 use SR\Cocoa\Transformer\Tests\Fixtures\StringTransformer;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 
@@ -126,6 +127,8 @@ class AbstractCacheableTransformerTest extends TestCase
         $this->assertSame('transformed=[string]', $transformer->transform('string'));
         $this->assertTrue($transformer->isCached('string'));
         $this->assertFalse($transformer->supports('not-string'));
+        $this->assertTrue($this->getAlternateCacheableSimpleStringTransformerInstance()->supports('string'));
+        $this->assertFalse($this->getAlternateCacheableSimpleStringTransformerInstance()->supports('not-string'));
     }
 
     public function testTransforms()
@@ -171,6 +174,18 @@ class AbstractCacheableTransformerTest extends TestCase
     private function getCacheableSimpleStringTransformerInstance(CacheItemPoolInterface $cache = null, \DateInterval $expiresAfter = null): CacheableTransformerInterface
     {
         return (new StringTransformer($cache ?: $this->getArrayAdapterMock()))
+            ->setExpiresAfter($expiresAfter);
+    }
+
+    /**
+     * @param CacheItemPoolInterface|null $cache
+     * @param \DateInterval               $expiresAfter
+     *
+     * @return CacheableTransformerInterface
+     */
+    private function getAlternateCacheableSimpleStringTransformerInstance(CacheItemPoolInterface $cache = null, \DateInterval $expiresAfter = null): CacheableTransformerInterface
+    {
+        return (new StringCacheableTransformer($cache ?: $this->getArrayAdapterMock()))
             ->setExpiresAfter($expiresAfter);
     }
 

@@ -84,6 +84,24 @@ abstract class AbstractCacheableTransformer extends AbstractTransformer implemen
     }
 
     /**
+     * Returns true if the passed type is supported by the transformer.
+     *
+     * @param string $type
+     *
+     * @return bool
+     */
+    public function supports(string $type): bool
+    {
+        if (parent::supports($type)) {
+            return true;
+        }
+
+        preg_match('{\\\(?<constraint>[A-Za-z0-9]+)CacheableTransformer}', get_called_class(), $matches);
+
+        return isset($matches['constraint']) && strtolower($type) === strtolower($matches['constraint']);
+    }
+
+    /**
      * @param string $string
      *
      * @return string
