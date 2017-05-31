@@ -21,14 +21,12 @@ env:
     - secure: "o4sQCFsm1YDymtRfx7hlghIyb79yEjnSQWqYGrJR324us2ZVhhF/txoG2h7GAEBvmwYsc9xs/kLFb1qBQUceItvMiVmfTbOjTXixxfBZXfhzuVfN5W72ThshoKc6jZe+36Fl6de8DQje9Jo9CjasHowXDMDPZAEct8gle9U9YR+SGqBY+ttLQUnGTFK7JDrN1KIKYKb2MdDBH6HhqiMBKOWHvfyfVIHr+3EPvNcVP7uQWOLqk82ryrcdGsxS0kLbAxdHolJG9nDFD9Sl47J8FP7DVohTPgCirZ6+6rRkyW/lwKhttmD1XenfFCzbXRm9DWd8IKulGzgd3ELbD7HfnpijGiD0bnsf6rIa9FywcnJRL3/llKQN1WLUyNHbuIDcXBRWQNgZ6ydwTg5iSMjY3Zhvc6hgJzfkDy8vGsHGDdil0dCKEhabCFW6rlQQ5jLenrCk6lYq/NOrgQR7BnNbXDdzBBTgqnGw2FBUdj0TcFuBIL7Jz+hMvYSLKLq7qM4OuVq3KoW66aOgYr7wmePyCy7SXfx5zJM9WlwSuk+dXDhGHWYmoebx3r3CqqJ7MAqjFi/KnjoqUxAmcqPnGoI6WgiK1leQZRc6GJhC63u+hx3tQLpSk+5XUM5DftSnqewfa57f6KJRGUu/cRVQRve/D+CMOZyfffsI01gqB4CClXs="
 
 install :
-  - bash .bldr/bldr -b up-env -q
-  - bash .bldr/bldr -b up-app -q
+  - bash .bldr/bldr -b up
 
 script :
   - bin/simple-phpunit || bin/phpunit
 
 after_script :
-  - bash .bldr/bldr -b down-app -q
-  - bash .bldr/bldr -b down-env -q
+  - bash .bldr/bldr -b down
 
 ...

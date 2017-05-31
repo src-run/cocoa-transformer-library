@@ -4,12 +4,12 @@ api_cfgmod: clone
 api_runner: ~
 api_paths: lib
 env_make: ~
-env_prep: get-composer
-env_post: ci-coveralls,ci-codacy
+env_prep: composer-get
 php_conf: timezone
 php_exts: ~
-app_prep: dep-composer
+app_prep: composer-req
 app_post: ~
+env_post: composer-del,ci-coveralls,ci-codacy
 app_path: ~
 pkg_name: cocoa-transformer-library
 pkg_desc: "Simple transformer and cacheable transformer interfaces with accompanying abstract implementations."
